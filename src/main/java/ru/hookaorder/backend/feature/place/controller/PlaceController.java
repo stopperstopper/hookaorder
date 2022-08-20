@@ -37,4 +37,9 @@ public class PlaceController {
     ResponseEntity<PlaceEntity> createPlace(@RequestBody PlaceEntity placeEntity) {
         return ResponseEntity.ok(placeRepository.save(placeEntity));
     }
+
+    @PostMapping("/update")
+    ResponseEntity<PlaceEntity> updatePlace(@RequestBody PlaceEntity placeEntity) {
+        return ResponseEntity.ok().body(placeRepository.save(placeEntity));
+    }
 }

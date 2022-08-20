@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 /**
@@ -28,6 +30,26 @@ public class PlaceEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    /**
+     * Time when place open
+     */
+    @Pattern(regexp = "^([01][0-9]|2[0-3]):([0-5][0-9])$")
+    @Column(name = "start_time")
+    private String startTime;
+
+    /**
+     * Time when place close
+     */
+    @Column(name = "end_time")
+    @Pattern(regexp = "^([01][0-9]|2[0-3]):([0-5][0-9])$")
+    private String endTime;
+
+    /**
+     * Url place logo
+     */
+    @Column(name = "logo_url")
+    @URL(regexp = "^(http|https).*")
+    private String logoUrl;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

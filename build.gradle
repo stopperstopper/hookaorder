@@ -8,6 +8,14 @@ group = 'ru.hookaorder'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+jar {
+	manifest {
+		attributes(
+				'Main-Class': 'ru.hookaorder.backend.BackendApplication'
+		)
+	}
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -33,4 +41,12 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+bootJar {
+	archiveClassifier.set('boot')
+}
+
+jar {
+	archiveClassifier.set('')
 }

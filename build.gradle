@@ -27,6 +27,8 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.2'
+
 }
 
 tasks.named('test') {

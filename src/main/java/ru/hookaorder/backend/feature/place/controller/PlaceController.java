@@ -38,8 +38,9 @@ public class PlaceController {
         return ResponseEntity.ok(placeRepository.save(placeEntity));
     }
 
-    @PostMapping("/update")
-    ResponseEntity<PlaceEntity> updatePlace(@RequestBody PlaceEntity placeEntity) {
-        return ResponseEntity.ok().body(placeRepository.save(placeEntity));
+    @PostMapping("/update/{id}")
+    ResponseEntity<PlaceEntity> updatePlace(@PathVariable Long id) {
+        return placeRepository.findById(id).map((val) -> ResponseEntity.ok(placeRepository.save(val)))
+                .orElse(ResponseEntity.badRequest().build());
     }
 }

@@ -1,10 +1,12 @@
 package ru.hookaorder.backend.feature.place.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.URL;
+import ru.hookaorder.backend.feature.address.entity.AddressEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -58,9 +60,15 @@ public class PlaceEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    @JsonProperty(value = "address")
+    private AddressEntity address;
+
     /**
      * Ignore delete on return entity
-     * @return  LocalDateTime
+     *
+     * @return LocalDateTime
      */
     @JsonIgnore
     public LocalDateTime getDeletedAt() {

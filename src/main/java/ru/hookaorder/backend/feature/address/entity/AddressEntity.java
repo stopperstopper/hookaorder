@@ -28,9 +28,9 @@ public class AddressEntity {
     @Column(name = "apartment")
     private String apartment;
     @Column(name = "lat")
-    private float lat;
+    private double lat;
     @Column(name = "lng")
-    private float lng;
+    private double lng;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

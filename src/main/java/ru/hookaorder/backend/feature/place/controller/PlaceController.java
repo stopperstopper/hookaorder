@@ -1,6 +1,8 @@
 package ru.hookaorder.backend.feature.place.controller;
 
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +23,7 @@ public class PlaceController {
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Where(clause = "deleted_at IS NULL")
     @GetMapping("/get/all")
     ResponseEntity<List<PlaceEntity>> getAllPlaces() {
         System.out.println(placeRepository.findAll());
@@ -28,6 +31,8 @@ public class PlaceController {
     }
 
     @DeleteMapping("/disband/{id}")
+    @Where(clause = "deleted_at IS NULL")
+    @SQLDelete(sql = "UPDATE places set deleted_at = now()::timestamp where id=?")
     ResponseEntity disbandById(@PathVariable Long id) {
         placeRepository.deleteById(id);
         return ResponseEntity.ok().build();
@@ -38,8 +43,9 @@ public class PlaceController {
         return ResponseEntity.ok(placeRepository.save(placeEntity));
     }
 
-    @PostMapping("/update")
-    ResponseEntity<PlaceEntity> updatePlace(@RequestBody PlaceEntity placeEntity) {
-        return ResponseEntity.ok().body(placeRepository.save(placeEntity));
+    @PostMapping("/update/{id}")
+    ResponseEntity<PlaceEntity> updatePlace(@PathVariable Long id) {
+        return placeRepository.findById(id).map((val) -> ResponseEntity.ok(placeRepository.save(val)))
+                .orElse(ResponseEntity.badRequest().build());
     }
 }

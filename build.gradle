@@ -1,4 +1,5 @@
 plugins {
+	id 'org.flywaydb.flyway' version '9.1.6'
 	id 'org.springframework.boot' version '2.7.3'
 	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 	id 'java'
@@ -23,12 +24,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.2'
-
+	implementation 'org.flywaydb:flyway-core'
 }
 
 tasks.named('test') {

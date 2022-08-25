@@ -17,8 +17,6 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "places")
-@SQLDelete(sql = "UPDATE places set deleted_at = now()::timestamp where id=?")
-@Where(clause = "deleted_at IS NULL")
 @Data
 public class PlaceEntity {
     @Id

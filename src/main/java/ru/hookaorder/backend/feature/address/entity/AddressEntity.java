@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "address")
 @Data
-@SQLDelete(sql = "UPDATE places set deleted_at = now()::timestamp where id=?")
 public class AddressEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,16 +37,6 @@ public class AddressEntity {
     private LocalDateTime updatedAt;
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-    /**
-     * Ignore delete on return entity
-     *
-     * @return LocalDateTime
-     */
-    @JsonIgnore
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
-    }
 
     @PrePersist
     void onCreate() {

@@ -14,33 +14,27 @@ public class UserController {
 
     @GetMapping(value = "/get/{id}")
     ResponseEntity getUserById(@PathVariable Long id) {
-        var user = userRepository.findById(id);
-        if (user.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(user.get());
+        return userRepository
+                .findById(id)
+                .map((userEntity) -> ResponseEntity.ok().body(userEntity))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping(value = "/create")
     ResponseEntity createUser(@RequestBody UserEntity user) {
-        var userEntity = userRepository.save(user);
-        return ResponseEntity.ok().body(userEntity);
+        return ResponseEntity.ok().body(userRepository.save(user));
     }
 
     @PutMapping(value = "/update/{id}")
     ResponseEntity updateUser(@PathVariable Long id, @RequestBody UserEntity user) {
-        var tempUser = userRepository.findById(id);
-        if (tempUser.isPresent()) {
-            var userEntity = userRepository.save(user);
-            return ResponseEntity.ok().body(userEntity);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return userRepository
+                .findById(id)
+                .map((userEntity) -> ResponseEntity.ok().body(userEntity))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping(value = "/get/all")
     ResponseEntity getAllUsers() {
-        var users = userRepository.findAll();
-        return ResponseEntity.ok().body(users);
+        return ResponseEntity.ok().body(userRepository.findAll());
     }
 }

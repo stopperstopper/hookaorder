@@ -1,6 +1,8 @@
 package ru.hookaorder.backend.feature.order.controller;
 
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,8 @@ public class OrderController {
     }
 
     @DeleteMapping("/disband/{id}")
+    @Where(clause = "deleted_at IS NULL")
+    @SQLDelete(sql = "UPDATE places set deleted_at = now()::timestamp where id=?")
     ResponseEntity disbandById(@PathVariable Long id) {
         orderRepository.deleteById(id);
         return ResponseEntity.ok().build();

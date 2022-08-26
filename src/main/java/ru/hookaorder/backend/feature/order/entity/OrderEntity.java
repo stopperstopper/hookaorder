@@ -6,19 +6,16 @@ import lombok.Data;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * Place entity
- */
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 @Data
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "place_id", nullable = false)
-    private Long placeId;
+    @Column(name = "order_id", nullable = false)
+    private Long orderId;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -36,10 +33,6 @@ public class OrderEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    /**
-     * Ignore delete on return entity
-     * @return  LocalDateTime
-     */
     @JsonIgnore
     public LocalDateTime getDeletedAt() {
         return deletedAt;

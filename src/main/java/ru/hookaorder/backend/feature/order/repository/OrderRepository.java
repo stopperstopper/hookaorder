@@ -13,5 +13,5 @@ public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
 
     void deleteById(Long id);
 
-    OrderEntity save(OrderEntity placeEntity);
+    OrderEntity save(OrderEntity orderEntity);
 }

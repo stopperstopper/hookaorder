@@ -58,11 +58,6 @@ public class PlaceEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
-    @JsonProperty(value = "address")
-    private AddressEntity address;
-
     /**
      * Ignore delete on return entity
      *

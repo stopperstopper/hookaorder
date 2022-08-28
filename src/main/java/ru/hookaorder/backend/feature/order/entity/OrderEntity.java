@@ -18,9 +18,9 @@ public class OrderEntity {
     @JoinColumn(name = "place_id ", referencedColumnName = "id", nullable = false)
     private Long placeId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private Long userId;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+//    private Long userId;
 
     @Column(name = "order_time", nullable = false)
     private String orderTime;

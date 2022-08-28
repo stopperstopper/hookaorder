@@ -1,8 +1,6 @@
 package ru.hookaorder.backend.feature.order.controller;
 
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +17,12 @@ public class OrderController {
 
     @GetMapping("/get/{id}")
     ResponseEntity<OrderEntity> getPlaceById(@PathVariable Long id) {
-        var response = orderRepository.findById(id);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return orderRepository.findById(id).map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/get/all")
     ResponseEntity<List<OrderEntity>> getAllPlaces() {
-        System.out.println(orderRepository.findAll());
         return ResponseEntity.ok(orderRepository.findAll());
     }
 

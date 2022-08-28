@@ -14,10 +14,12 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "order_id", nullable = false)
-    private Long orderId;
+    @ManyToOne
+    @JoinColumn(name = "place_id ", referencedColumnName = "id", nullable = false)
+    private Long placeId;
 
-    @Column(name = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private Long userId;
 
     @Column(name = "order_time", nullable = false)

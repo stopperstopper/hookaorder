@@ -29,21 +29,14 @@ public class OrderController {
         return ResponseEntity.ok(orderRepository.findAll());
     }
 
-    @DeleteMapping("/disband/{id}")
-    @Where(clause = "deleted_at IS NULL")
-    @SQLDelete(sql = "UPDATE places set deleted_at = now()::timestamp where id=?")
-    ResponseEntity disbandById(@PathVariable Long id) {
-        orderRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/create")
     ResponseEntity<OrderEntity> createPlace(@RequestBody OrderEntity orderEntity) {
         return ResponseEntity.ok(orderRepository.save(orderEntity));
     }
 
     @PostMapping("/update")
-    ResponseEntity<OrderEntity> updatePlace(@RequestBody OrderEntity orderEntity) {
-        return ResponseEntity.ok().body(orderRepository.save(orderEntity));
+    ResponseEntity<OrderEntity> updatePlace(@PathVariable Long id) {
+        return orderRepository.findById(id).map((val) -> ResponseEntity.ok(orderRepository.save(val)))
+                .orElse(ResponseEntity.badRequest().build());
     }
 }

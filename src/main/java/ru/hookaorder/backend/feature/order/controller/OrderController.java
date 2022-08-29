@@ -16,23 +16,23 @@ public class OrderController {
     private OrderRepository orderRepository;
 
     @GetMapping("/get/{id}")
-    ResponseEntity<OrderEntity> getPlaceById(@PathVariable Long id) {
+    ResponseEntity<OrderEntity> getOrderById(@PathVariable Long id) {
         return orderRepository.findById(id).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/get/all")
-    ResponseEntity<List<OrderEntity>> getAllPlaces() {
+    ResponseEntity<List<OrderEntity>> getAllOrders() {
         return ResponseEntity.ok(orderRepository.findAll());
     }
 
     @PostMapping("/create")
-    ResponseEntity<OrderEntity> createPlace(@RequestBody OrderEntity orderEntity) {
+    ResponseEntity<OrderEntity> createOrder(@RequestBody OrderEntity orderEntity) {
         return ResponseEntity.ok(orderRepository.save(orderEntity));
     }
 
     @PostMapping("/update")
-    ResponseEntity<OrderEntity> updatePlace(@PathVariable Long id) {
+    ResponseEntity<OrderEntity> updateOrder(@PathVariable Long id) {
         return orderRepository.findById(id).map((val) -> ResponseEntity.ok(orderRepository.save(val)))
                 .orElse(ResponseEntity.badRequest().build());
     }

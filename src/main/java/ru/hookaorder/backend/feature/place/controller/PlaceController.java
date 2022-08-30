@@ -30,14 +30,6 @@ public class PlaceController {
         return ResponseEntity.ok(placeRepository.findAll());
     }
 
-    @DeleteMapping("/disband/{id}")
-    @Where(clause = "deleted_at IS NULL")
-    @SQLDelete(sql = "UPDATE places set deleted_at = now()::timestamp where id=?")
-    ResponseEntity disbandById(@PathVariable Long id) {
-        placeRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping("/create")
     ResponseEntity<PlaceEntity> createPlace(@RequestBody PlaceEntity placeEntity) {
         return ResponseEntity.ok(placeRepository.save(placeEntity));

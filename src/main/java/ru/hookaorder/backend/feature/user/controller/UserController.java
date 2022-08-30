@@ -2,6 +2,7 @@ package ru.hookaorder.backend.feature.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.user.entity.UserEntity;
 import ru.hookaorder.backend.feature.user.repository.UserRepository;
@@ -9,38 +10,41 @@ import ru.hookaorder.backend.feature.user.repository.UserRepository;
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
-    UserRepository userRepository;
+    public UserController(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping(value = "/get/{id}")
     ResponseEntity getUserById(@PathVariable Long id) {
-        var user = userRepository.findById(id);
-        if (user.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok().body(user.get());
+        return userRepository
+                .findById(id)
+                .map((val) -> ResponseEntity.ok().body(val))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping(value = "/create")
     ResponseEntity createUser(@RequestBody UserEntity user) {
-        var userEntity = userRepository.save(user);
-        return ResponseEntity.ok().body(userEntity);
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        return ResponseEntity
+                .ok()
+                .body(userRepository.save(user));
     }
 
     @PutMapping(value = "/update/{id}")
     ResponseEntity updateUser(@PathVariable Long id, @RequestBody UserEntity user) {
-        var tempUser = userRepository.findById(id);
-        if (tempUser.isPresent()) {
-            var userEntity = userRepository.save(user);
-            return ResponseEntity.ok().body(userEntity);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return userRepository
+                .findById(id)
+                .map((val) -> ResponseEntity.ok().body(userRepository.save(user)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping(value = "/get/all")
     ResponseEntity getAllUsers() {
-        var users = userRepository.findAll();
-        return ResponseEntity.ok().body(users);
+        return ResponseEntity.ok().body(userRepository.findAll());
     }
 }

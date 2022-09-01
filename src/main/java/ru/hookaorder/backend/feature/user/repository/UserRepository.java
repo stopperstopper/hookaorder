@@ -9,4 +9,6 @@ public interface UserRepository extends CrudRepository<UserEntity, Long> {
 
     @Override
     Optional<UserEntity> findById(Long userId);
+
+    Optional<UserEntity> findByPhone(String phone);
 }

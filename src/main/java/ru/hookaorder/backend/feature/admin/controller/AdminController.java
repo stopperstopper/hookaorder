@@ -1,24 +1,23 @@
 package ru.hookaorder.backend.feature.admin.controller;
 
+import lombok.AllArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.place.repository.PlaceRepository;
 
 @RestController
 @RequestMapping(value = "/admin")
+@AllArgsConstructor
+@PreAuthorize("hasAuthority('ADMIN')")
 public class AdminController {
     private final PlaceRepository placeRepository;
 
-    @Autowired
-    public AdminController(PlaceRepository placeRepository) {
-        this.placeRepository = placeRepository;
+    @GetMapping("/ping")
+    ResponseEntity pingAdmin() {
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/disband/{id}")

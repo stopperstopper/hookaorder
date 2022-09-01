@@ -3,8 +3,6 @@ package ru.hookaorder.backend.feature.place.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.hibernate.validator.constraints.URL;
 import ru.hookaorder.backend.feature.address.entity.AddressEntity;
 
@@ -50,6 +48,10 @@ public class PlaceEntity {
     @Column(name = "logo_url")
     @URL(regexp = "^(http|https).*")
     private String logoUrl;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    @JsonProperty(value = "address")
+    private AddressEntity address;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

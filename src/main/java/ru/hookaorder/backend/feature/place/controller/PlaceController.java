@@ -1,7 +1,6 @@
 package ru.hookaorder.backend.feature.place.controller;
 
 
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +18,12 @@ public class PlaceController {
 
     @GetMapping("/get/{id}")
     ResponseEntity<PlaceEntity> getPlaceById(@PathVariable Long id) {
-        var response = placeRepository.findById(id);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return placeRepository.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Where(clause = "deleted_at IS NULL")
     @GetMapping("/get/all")
     ResponseEntity<List<PlaceEntity>> getAllPlaces() {
-        System.out.println(placeRepository.findAll());
         return ResponseEntity.ok(placeRepository.findAll());
     }
 

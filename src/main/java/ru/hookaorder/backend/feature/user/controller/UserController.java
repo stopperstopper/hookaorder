@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.user.entity.UserEntity;
 import ru.hookaorder.backend.feature.user.repository.UserRepository;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
@@ -30,6 +32,9 @@ public class UserController {
     @PostMapping(value = "/create")
     ResponseEntity createUser(@RequestBody UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        if (!Objects.requireNonNull(user.getRolesSet()).isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity
                 .ok()
                 .body(userRepository.save(user));
@@ -37,6 +42,9 @@ public class UserController {
 
     @PutMapping(value = "/update/{id}")
     ResponseEntity updateUser(@PathVariable Long id, @RequestBody UserEntity user) {
+        if (user.getRolesSet().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
         return userRepository
                 .findById(id)
                 .map((val) -> ResponseEntity.ok().body(userRepository.save(user)))

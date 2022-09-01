@@ -2,12 +2,15 @@ package ru.hookaorder.backend.feature.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.lang.Nullable;
+import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Data
@@ -38,6 +41,20 @@ public class UserEntity {
     @NotBlank
     @Column(name = "password", nullable = false)
     private String password;
+
+    @ManyToMany
+    @JoinColumn
+    @Nullable
+    private Set<RoleEntity> rolesSet;
+
+    @Nullable
+    public Set<RoleEntity> getRolesSet() {
+        if (rolesSet == null) {
+            return Collections.emptySet();
+        }
+        return rolesSet;
+    }
+
 
     /**
      * Ignore delete on return entity

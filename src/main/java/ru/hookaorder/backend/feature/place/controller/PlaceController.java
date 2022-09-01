@@ -1,6 +1,8 @@
 package ru.hookaorder.backend.feature.place.controller;
 
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +15,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/place")
+@Api(description = "Контроллер")
 public class PlaceController {
     @Autowired
     private PlaceRepository placeRepository;
 
     @GetMapping("/get/{id}")
+    @ApiOperation("Get")
     ResponseEntity<PlaceEntity> getPlaceById(@PathVariable Long id) {
         var response = placeRepository.findById(id);
         return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

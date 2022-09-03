@@ -4,13 +4,15 @@ package ru.hookaorder.backend.feature.roles.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 @Table(name = "roles")
 @Entity
+@RequiredArgsConstructor
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,11 +23,11 @@ public class RoleEntity {
     private String roleName;
 
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
     @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
+    private LocalDate deletedAt;
 
     /**
      * Ignore delete on return entity
@@ -33,14 +35,14 @@ public class RoleEntity {
      * @return LocalDateTime
      */
     @JsonIgnore
-    public LocalDateTime getDeletedAt() {
+    public LocalDate getDeletedAt() {
         return deletedAt;
     }
 
     @PrePersist
     void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDate.now();
+        this.updatedAt = LocalDate.now();
     }
 
 }

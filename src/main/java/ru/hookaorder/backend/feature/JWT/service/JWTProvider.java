@@ -33,11 +33,11 @@ public class JWTProvider {
         final Instant accessExpirationInstant = now.plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
         return Jwts.builder()
-                .setSubject(user.getEmail())
+                .setSubject(user.getPhone())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
                 .claim("roles", user.getRolesSet())
-                .claim("user_id", user.getId())
+                .claim("userId", user.getId())
                 .compact();
     }
 

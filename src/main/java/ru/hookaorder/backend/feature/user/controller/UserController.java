@@ -1,5 +1,6 @@
 package ru.hookaorder.backend.feature.user.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,15 +12,10 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/user")
+@AllArgsConstructor
 public class UserController {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
-    public UserController(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.userRepository = userRepository;
-    }
 
     @GetMapping(value = "/get/{id}")
     ResponseEntity getUserById(@PathVariable Long id) {

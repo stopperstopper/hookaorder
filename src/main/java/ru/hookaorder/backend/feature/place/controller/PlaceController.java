@@ -23,15 +23,13 @@ public class PlaceController {
     @GetMapping("/get/{id}")
     @ApiOperation("Получение заведения по id")
     ResponseEntity<PlaceEntity> getPlaceById(@PathVariable Long id) {
-        var response = placeRepository.findById(id);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return placeRepository.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Where(clause = "deleted_at IS NULL")
     @GetMapping("/get/all")
     @ApiOperation("Получение списка всех заведений")
     ResponseEntity<List<PlaceEntity>> getAllPlaces() {
-        System.out.println(placeRepository.findAll());
         return ResponseEntity.ok(placeRepository.findAll());
     }
 

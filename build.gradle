@@ -52,5 +52,5 @@ bootJar {
 }
 
 jar {
-    archiveClassifier.set('')
+	archiveClassifier.set('')
 }

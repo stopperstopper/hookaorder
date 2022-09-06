@@ -7,6 +7,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.place.repository.PlaceRepository;
@@ -43,6 +44,7 @@ public class PlaceController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Создаем заведение")
     ResponseEntity<PlaceEntity> createPlace(@RequestBody PlaceEntity placeEntity) {
         return ResponseEntity.ok(placeRepository.save(placeEntity));

@@ -28,7 +28,7 @@ public class UserController {
     @PostMapping(value = "/create")
     ResponseEntity createUser(@RequestBody UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        if (!Objects.requireNonNull(user.getRolesSet()).isEmpty()) {
+        if (!Objects.isNull(user.getRolesSet())) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity

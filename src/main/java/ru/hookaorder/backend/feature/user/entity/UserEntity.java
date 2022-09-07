@@ -32,6 +32,5 @@ public class UserEntity extends BaseEntity {
 
     @ManyToMany
     @JoinColumn
-    @Nullable
     private Set<RoleEntity> rolesSet;
 }

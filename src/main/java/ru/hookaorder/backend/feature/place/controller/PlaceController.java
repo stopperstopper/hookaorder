@@ -7,6 +7,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.place.repository.PlaceRepository;
@@ -23,15 +24,13 @@ public class PlaceController {
     @GetMapping("/get/{id}")
     @ApiOperation("Получение заведения по id")
     ResponseEntity<PlaceEntity> getPlaceById(@PathVariable Long id) {
-        var response = placeRepository.findById(id);
-        return response.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return placeRepository.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @Where(clause = "deleted_at IS NULL")
     @GetMapping("/get/all")
     @ApiOperation("Получение списка всех заведений")
     ResponseEntity<List<PlaceEntity>> getAllPlaces() {
-        System.out.println(placeRepository.findAll());
         return ResponseEntity.ok(placeRepository.findAll());
     }
 
@@ -45,6 +44,7 @@ public class PlaceController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation("Создаем заведение")
     ResponseEntity<PlaceEntity> createPlace(@RequestBody PlaceEntity placeEntity) {
         return ResponseEntity.ok(placeRepository.save(placeEntity));

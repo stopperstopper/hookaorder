@@ -1,7 +1,7 @@
 package ru.hookaorder.backend.feature.user.entity;
 
-import lombok.Data;
-import org.springframework.lang.Nullable;
+import lombok.Getter;
+import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
 import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 
@@ -12,7 +12,8 @@ import java.util.Collections;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
     @Column(name = "name")
@@ -23,7 +24,7 @@ public class UserEntity extends BaseEntity {
     private String email;
 
     @Column(name = "phone", nullable = false, unique = true)
-    @Pattern(regexp = "^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$")
+    @Pattern(regexp = "^[+]?[(]?[0-9]{3}[)]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9]{4,6}$")
     private String phone;
 
     @NotBlank
@@ -32,5 +33,5 @@ public class UserEntity extends BaseEntity {
 
     @ManyToMany
     @JoinColumn
-    private Set<RoleEntity> rolesSet;
+    private Set<RoleEntity> rolesSet = Collections.emptySet();
 }

@@ -50,7 +50,7 @@ public class PlaceEntity extends BaseEntity {
     private String logoUrl;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    @JoinColumn()
     @JsonProperty(value = "owner")
     private UserEntity owner;
 

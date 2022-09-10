@@ -1,10 +1,10 @@
 package ru.hookaorder.backend.feature.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
-import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 
 import javax.persistence.*;
@@ -31,14 +31,16 @@ public class UserEntity extends BaseEntity {
 
     @NotBlank
     @Column(name = "password", nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "is_enabled")
-    @JsonProperty(value = "is_enabled")
+    @JsonProperty(value = "is_enabled", access = JsonProperty.Access.READ_ONLY)
     private boolean isEnabled = true;
 
     @ManyToMany
     @JoinColumn
-    private Set<RoleEntity> rolesSet;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private Set<RoleEntity> rolesSet = Collections.emptySet();
 
 }

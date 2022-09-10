@@ -3,20 +3,18 @@ package ru.hookaorder.backend.feature.order.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.order.entity.OrderEntity;
 import ru.hookaorder.backend.feature.order.repository.OrderRepository;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(value = "/order")
 @Api(description = "Контроллер заказов")
+@RequiredArgsConstructor
 public class OrderController {
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     @GetMapping("/get/{id}")
     @ApiOperation("Получение заказа по id")
@@ -27,7 +25,7 @@ public class OrderController {
 
     @GetMapping("/get/all")
     @ApiOperation("Получение всех заказов")
-    ResponseEntity<List<OrderEntity>> getAllPlaces() {
+    ResponseEntity<Iterable<OrderEntity>> getAllPlaces() {
         return ResponseEntity.ok(orderRepository.findAll());
     }
 
@@ -37,7 +35,7 @@ public class OrderController {
         return ResponseEntity.ok(orderRepository.save(orderEntity));
     }
 
-    @PostMapping("/update")
+    @PostMapping("/update/{id}")
     @ApiOperation("Обновление заказа по id")
     ResponseEntity<OrderEntity> updatePlace(@PathVariable Long id) {
         return orderRepository.findById(id).map((val) -> ResponseEntity.ok(orderRepository.save(val)))

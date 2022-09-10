@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
+import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 
 import javax.persistence.*;
@@ -38,5 +39,6 @@ public class UserEntity extends BaseEntity {
 
     @ManyToMany
     @JoinColumn
-    private Set<RoleEntity> rolesSet = Collections.emptySet();
+    private Set<RoleEntity> rolesSet;
+
 }

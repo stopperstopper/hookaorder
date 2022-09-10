@@ -1,14 +1,13 @@
 package ru.hookaorder.backend.feature.user.entity;
 
 import lombok.Data;
-import org.springframework.lang.Nullable;
 import ru.hookaorder.backend.feature.BaseEntity;
+import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.Collections;
 import java.util.Set;
 
 @Entity
@@ -33,4 +32,7 @@ public class UserEntity extends BaseEntity {
     @ManyToMany
     @JoinColumn
     private Set<RoleEntity> rolesSet;
+
+    @OneToMany()
+    private Set<PlaceEntity> placesEntity;
 }

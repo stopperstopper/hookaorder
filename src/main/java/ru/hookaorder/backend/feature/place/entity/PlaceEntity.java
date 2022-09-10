@@ -50,12 +50,12 @@ public class PlaceEntity extends BaseEntity {
     private String logoUrl;
 
     @ManyToOne
-    @JoinColumn()
+    @JoinColumn
     @JsonProperty(value = "owner")
     private UserEntity owner;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    @OneToOne
+    @JoinColumn
     @JsonProperty(value = "address")
     private AddressEntity address;
 }

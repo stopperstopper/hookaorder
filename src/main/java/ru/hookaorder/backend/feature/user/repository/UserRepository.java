@@ -6,9 +6,6 @@ import ru.hookaorder.backend.feature.user.entity.UserEntity;
 import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<UserEntity, Long> {
-
-    @Override
-    Optional<UserEntity> findById(Long userId);
-
     Optional<UserEntity> findByPhone(String phone);
+
 }

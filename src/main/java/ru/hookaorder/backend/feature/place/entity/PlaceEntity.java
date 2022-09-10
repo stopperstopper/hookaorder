@@ -1,14 +1,14 @@
 package ru.hookaorder.backend.feature.place.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
+import ru.hookaorder.backend.feature.BaseEntity;
 import ru.hookaorder.backend.feature.address.entity.AddressEntity;
+import ru.hookaorder.backend.feature.user.entity.UserEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
-import java.time.LocalDateTime;
 
 /**
  * Place entity
@@ -16,10 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "places")
 @Data
-public class PlaceEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+public class PlaceEntity extends BaseEntity {
 
     /**
      * Name place.
@@ -31,14 +28,16 @@ public class PlaceEntity {
     /**
      * Time when place open
      */
-    @Pattern(regexp = "^([01][0-9]|2[0-3]):([0-5][0-9])$")
     @Column(name = "start_time")
+    @JsonProperty(value = "start_time")
+    @Pattern(regexp = "^([01][0-9]|2[0-3]):([0-5][0-9])$")
     private String startTime;
 
     /**
      * Time when place close
      */
     @Column(name = "end_time")
+    @JsonProperty(value = "end_time")
     @Pattern(regexp = "^([01][0-9]|2[0-3]):([0-5][0-9])$")
     private String endTime;
 
@@ -46,39 +45,17 @@ public class PlaceEntity {
      * Url place logo
      */
     @Column(name = "logo_url")
+    @JsonProperty(value = "logo_url")
     @URL(regexp = "^(http|https).*")
     private String logoUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    @JsonProperty(value = "owner")
+    private UserEntity owner;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
     @JsonProperty(value = "address")
     private AddressEntity address;
-
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    /**
-     * Ignore delete on return entity
-     *
-     * @return LocalDateTime
-     */
-    @JsonIgnore
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    @PrePersist
-    void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
 }

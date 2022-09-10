@@ -1,5 +1,6 @@
 package ru.hookaorder.backend.feature.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
@@ -30,6 +31,10 @@ public class UserEntity extends BaseEntity {
     @NotBlank
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "is_enabled")
+    @JsonProperty(value = "is_enabled")
+    private boolean isEnabled = true;
 
     @ManyToMany
     @JoinColumn

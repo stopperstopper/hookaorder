@@ -27,7 +27,7 @@ public class OrderEntity {
     private String orderTime;
 
     @Column(name = "comment")
-    private String comment ;
+    private String comment;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

@@ -52,7 +52,7 @@ public class PlaceEntity extends BaseEntity {
     private String logoUrl;
 
     @ManyToOne
-    @JoinColumn()
+    @JoinColumn
     @JsonProperty(value = "owner")
     private UserEntity owner;
 

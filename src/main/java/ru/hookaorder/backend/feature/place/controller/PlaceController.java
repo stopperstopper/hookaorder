@@ -12,6 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.place.repository.PlaceRepository;
+import ru.hookaorder.backend.feature.roles.entity.ERole;
+import ru.hookaorder.backend.feature.user.entity.UserEntity;
+import ru.hookaorder.backend.feature.user.repository.UserRepository;
 import ru.hookaorder.backend.utils.NullAwareBeanUtilsBean;
 
 import java.util.List;
@@ -22,6 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PlaceController {
     private final PlaceRepository placeRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/get/{id}")
     @ApiOperation("Получение заведения по id")
@@ -41,8 +45,9 @@ public class PlaceController {
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER')")
     @ApiOperation("Создаем заведение")
     ResponseEntity<PlaceEntity> createPlace(@RequestBody PlaceEntity placeEntity, Authentication authentication) {
-        if (!authentication.getAuthorities().contains("ADMIN")) {
-            placeEntity.setId((Long) authentication.getPrincipal());
+        if (!authentication.getAuthorities().contains(ERole.valueOf("ADMIN"))) {
+            UserEntity entity = userRepository.findById((Long)authentication.getPrincipal()).get();
+            placeEntity.setOwner(entity);
         }
         return ResponseEntity.ok(placeRepository.save(placeEntity));
     }

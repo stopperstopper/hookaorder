@@ -1,18 +1,18 @@
 package ru.hookaorder.backend.feature.address.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import ru.hookaorder.backend.feature.BaseEntity;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "address")
-@Data
-public class AddressEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+@Getter
+@Setter
+public class AddressEntity extends BaseEntity {
     @Column(name = "country")
     private String country;
     @Column(name = "city", nullable = false)
@@ -27,22 +27,4 @@ public class AddressEntity {
     private double lat;
     @Column(name = "lng")
     private double lng;
-
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @PrePersist
-    void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

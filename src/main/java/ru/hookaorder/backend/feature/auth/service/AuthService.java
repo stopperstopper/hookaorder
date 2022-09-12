@@ -26,7 +26,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public JWTResponse login(@NonNull JWTRequest authRequest) throws AuthException {
-        final UserEntity user = userService.findByPhone(authRequest.getLogin())
+        final UserEntity user = userService.findByPhone(authRequest.getPhone())
                 .orElseThrow(() -> new AuthException("Пользователь не найден"));
         if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);

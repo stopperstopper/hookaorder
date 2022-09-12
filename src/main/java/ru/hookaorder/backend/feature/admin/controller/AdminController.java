@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.place.repository.PlaceRepository;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
+@ApiIgnore
 @RequestMapping(value = "/admin")
 @AllArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN')")

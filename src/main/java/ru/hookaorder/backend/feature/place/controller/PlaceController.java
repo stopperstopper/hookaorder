@@ -12,16 +12,20 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.place.repository.PlaceRepository;
+import ru.hookaorder.backend.feature.roles.entity.ERole;
+import ru.hookaorder.backend.feature.user.repository.UserRepository;
+import ru.hookaorder.backend.utils.CheckOwnerAndRolesAccess;
 import ru.hookaorder.backend.utils.NullAwareBeanUtilsBean;
 
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/place")
-@Api(description = "Контроллер заведения")
+@Api(tags = "Контроллер заведения")
 @AllArgsConstructor
 public class PlaceController {
     private final PlaceRepository placeRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/get/{id}")
     @ApiOperation("Получение заведения по id")
@@ -36,13 +40,13 @@ public class PlaceController {
         return ResponseEntity.ok(placeRepository.findAll());
     }
 
-
     @PostMapping("/create")
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER')")
     @ApiOperation("Создаем заведение")
     ResponseEntity<PlaceEntity> createPlace(@RequestBody PlaceEntity placeEntity, Authentication authentication) {
-        if (!authentication.getAuthorities().contains("ADMIN")) {
-            placeEntity.setId((Long) authentication.getPrincipal());
+        if (!authentication.getAuthorities().contains(ERole.ADMIN)) {
+            var user = userRepository.findById((Long) authentication.getPrincipal()).get();
+            placeEntity.setOwner(user);
         }
         return ResponseEntity.ok(placeRepository.save(placeEntity));
     }
@@ -52,27 +56,24 @@ public class PlaceController {
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER')")
     ResponseEntity<?> updatePlace(@PathVariable Long id, @RequestBody PlaceEntity placeEntity, Authentication authentication) {
         return placeRepository.findById(id).map((val) -> {
-            if (!val.getOwner().getId().equals(authentication.getPrincipal()) || !authentication.getAuthorities().contains("ADMIN")) {
+            if (!CheckOwnerAndRolesAccess.isOwnerOrAdmin(placeEntity, authentication)) {
                 return ResponseEntity.badRequest().body("Access denied");
             }
-            if (val.getOwner().getId().equals(authentication.getPrincipal())) {
-                NullAwareBeanUtilsBean.copyNoNullProperties(placeEntity, val);
-                if (!authentication.getAuthorities().contains("ADMIN")) {
-                    val.getOwner().setId((Long) authentication.getPrincipal());
-                }
-                return ResponseEntity.ok(placeRepository.save(val));
-            }
-            return ResponseEntity.badRequest().body("Invalid owner id");
+            NullAwareBeanUtilsBean.copyNoNullProperties(placeEntity, val);
+            return ResponseEntity.ok(placeRepository.save(val));
         }).orElse(ResponseEntity.badRequest().body("Invalid place id"));
     }
 
     @DeleteMapping("/disband/{id}")
-    @ApiOperation("Помечаем заведение на удаление")
-    @Where(clause = "deleted_at IS NULL")
+    @ApiOperation("Удаляем заведение")
     @SQLDelete(sql = "UPDATE places set deleted_at = now()::timestamp where id=?")
-    @PreAuthorize("hasAnyAuthority('ADMIN','OWNER')")
-    ResponseEntity<?> disbandById(@PathVariable Long id) {
-        placeRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+    @PreAuthorize("hasAuthority('ADMIN')")
+    ResponseEntity<?> disbandById(@PathVariable Long id, Authentication authentication) {
+        return placeRepository.findById(id).map((val) -> {
+            if (CheckOwnerAndRolesAccess.isOwnerOrAdmin(val, authentication)) {
+                placeRepository.deleteById(val.getId());
+            }
+            return ResponseEntity.badRequest().body("Access denied");
+        }).orElse(ResponseEntity.badRequest().body("Place not found"));
     }
 }

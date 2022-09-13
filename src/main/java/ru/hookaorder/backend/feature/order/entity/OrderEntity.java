@@ -1,55 +1,37 @@
 package ru.hookaorder.backend.feature.order.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import ru.hookaorder.backend.feature.BaseEntity;
 import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
+import ru.hookaorder.backend.feature.user.entity.UserEntity;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
-@Data
-public class OrderEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+@Setter
+@Getter
+@EqualsAndHashCode
+public class OrderEntity extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "places_id", referencedColumnName = "id", nullable = false)
+    @JsonProperty(value = "place_id")
     private PlaceEntity placeId;
 
-//    @ManyToOne
-//    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-//    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonProperty(value = "user_id")
+    private UserEntity userId;
 
     @Column(name = "order_time", nullable = false)
+    @JsonProperty(value = "order_time")
     private String orderTime;
 
-    @Column(name = "comment")
-    private String comment;
-
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
-    @JsonIgnore
-    public LocalDateTime getDeletedAt() {
-        return deletedAt;
-    }
-
-    @PrePersist
-    void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+//    @Column(name = "comment")
+//    private String comment;
 
 }

@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import ru.hookaorder.backend.feature.roles.entity.ERole;
 import ru.hookaorder.backend.feature.user.entity.UserEntity;
 import ru.hookaorder.backend.feature.user.repository.UserRepository;
 import ru.hookaorder.backend.utils.NullAwareBeanUtilsBean;
@@ -34,9 +35,6 @@ public class UserController {
     @ApiOperation("Создание пользователя")
     ResponseEntity<?> createUser(@RequestBody UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        if (!user.getRolesSet().isEmpty()) {
-            return ResponseEntity.badRequest().body("Invalid roles");
-        }
         return ResponseEntity.ok().body(userRepository.save(user));
     }
 
@@ -44,11 +42,8 @@ public class UserController {
     @ApiOperation("Обновление пользователя по id")
     ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody UserEntity user, Authentication authentication) {
         return userRepository.findById(id).map((val) -> {
-            if (val.getId() != authentication.getPrincipal()) {
+            if (val.getId() != authentication.getPrincipal() || !authentication.getAuthorities().contains(ERole.ADMIN)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden for this user");
-            }
-            if (!user.getRolesSet().isEmpty()) {
-                return ResponseEntity.badRequest().body("Invalid roles");
             }
             NullAwareBeanUtilsBean.copyNoNullProperties(user, val);
             return ResponseEntity.ok().body(userRepository.save(val));

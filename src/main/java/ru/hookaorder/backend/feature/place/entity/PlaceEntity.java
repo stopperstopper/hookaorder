@@ -1,6 +1,7 @@
 package ru.hookaorder.backend.feature.place.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
@@ -10,6 +11,7 @@ import ru.hookaorder.backend.feature.user.entity.UserEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
+import java.util.Set;
 
 /**
  * Place entity
@@ -18,6 +20,7 @@ import javax.validation.constraints.Pattern;
 @Table(name = "places")
 @Getter
 @Setter
+@EqualsAndHashCode
 public class PlaceEntity extends BaseEntity {
 
     /**
@@ -52,11 +55,16 @@ public class PlaceEntity extends BaseEntity {
     private String logoUrl;
 
     @ManyToOne
-    @JoinColumn
-    @JsonProperty(value = "owner")
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    @JsonProperty(value = "owner", access = JsonProperty.Access.READ_ONLY)
     private UserEntity owner;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
     private AddressEntity address;
+
+    @ManyToMany
+    @JoinColumn(name = "stuff_id", referencedColumnName = "id")
+    @JsonProperty(value = "stuff", access = JsonProperty.Access.READ_ONLY)
+    private Set<UserEntity> stuff;
 }

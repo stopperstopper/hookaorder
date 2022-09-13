@@ -2,9 +2,11 @@ package ru.hookaorder.backend.feature.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
+import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 
 import javax.persistence.*;
@@ -16,6 +18,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
     @Column(name = "name")
@@ -41,6 +44,13 @@ public class UserEntity extends BaseEntity {
     @ManyToMany
     @JoinColumn
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonProperty(value = "roles", access = JsonProperty.Access.READ_ONLY)
     private Set<RoleEntity> rolesSet = Collections.emptySet();
+
+    @ManyToMany
+    @JoinColumn
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    @JsonProperty(value = "work_places", access = JsonProperty.Access.READ_ONLY)
+    private Set<PlaceEntity> workPlaces = Collections.emptySet();
 
 }

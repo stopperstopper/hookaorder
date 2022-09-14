@@ -14,7 +14,7 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Arrays;
+
 
 @Configuration
 @EnableSwagger2
@@ -27,7 +27,7 @@ public class SwaggerConfig {
 				.apis(RequestHandlerSelectors.basePackage("ru.hookaorder.backend.feature"))
 				.paths(PathSelectors.any())
 				.build();
-		//	.securitySchemes(Arrays.asList(apiKey()));
+
 
 	}
 	private ApiInfo apiInfo() {
@@ -37,8 +37,6 @@ public class SwaggerConfig {
 				.version("1.1.0")
 				.build();
 	}
-	private ApiKey apiKey() {
-		return new ApiKey("jwtToken", "Authorization", "header");
-	}
+
 
 }

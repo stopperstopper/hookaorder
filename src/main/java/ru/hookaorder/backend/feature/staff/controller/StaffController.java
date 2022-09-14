@@ -32,9 +32,9 @@ public class StaffController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'OWNER')")
-    @PostMapping("/staff/delete/{id}")
-    public ResponseEntity<?> deleteStuffFromPlace(@PathVariable Long id, @RequestBody Set<Long> users, Authentication authentication) {
-        return placeRepository.findById(id).map((val) -> {
+    @DeleteMapping("/staff/delete/{placeId}")
+    public ResponseEntity<?> deleteStuffFromPlace(@PathVariable Long placeId, @RequestBody Set<Long> users, Authentication authentication) {
+        return placeRepository.findById(placeId).map((val) -> {
             if (CheckOwnerAndRolesAccess.isOwnerOrAdmin(val, authentication)) {
                 val.getStaff().removeAll(Sets.newHashSet(userRepository.findAllById(users)));
                 return ResponseEntity.ok().body(placeRepository.save(val));

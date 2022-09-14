@@ -1,5 +1,6 @@
 package ru.hookaorder.backend.feature.user.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -17,24 +18,28 @@ import ru.hookaorder.backend.utils.NullAwareBeanUtilsBean;
 
 @RestController
 @RequestMapping(value = "/user")
+@Api(tags = "Контроллер пользователей")
 @AllArgsConstructor
 public class UserController {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @GetMapping(value = "/get/{id}")
+    @ApiOperation("Получение пользователя по id")
     @Where(clause = "is_enabled IS TRUE")
     ResponseEntity<?> getUserById(@PathVariable Long id) {
         return userRepository.findById(id).map((val) -> ResponseEntity.ok().body(val)).orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping(value = "/create")
+    @ApiOperation("Создание пользователя")
     ResponseEntity<?> createUser(@RequestBody UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return ResponseEntity.ok().body(userRepository.save(user));
     }
 
     @PutMapping(value = "/update/{id}")
+    @ApiOperation("Обновление пользователя по id")
     ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody UserEntity user, Authentication authentication) {
         return userRepository.findById(id).map((val) -> {
             if (val.getId() != authentication.getPrincipal() || !authentication.getAuthorities().contains(ERole.ADMIN)) {
@@ -46,7 +51,7 @@ public class UserController {
     }
 
     @DeleteMapping("/disable")
-    @ApiOperation(value = "Деактивация аккаунта со стороны пользоватея")
+    @ApiOperation(value = "Деактивация аккаунта со стороны пользователя")
     ResponseEntity<?> disableByUser(Authentication authentication) {
         UserEntity entity = userRepository.findById((Long) authentication.getPrincipal()).get();
         entity.setEnabled(false);
@@ -55,6 +60,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/get/all")
+    @ApiOperation("Получение списка всех пользователя")
     @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<?> getAllUsers() {
         return ResponseEntity.ok().body(userRepository.findAll());

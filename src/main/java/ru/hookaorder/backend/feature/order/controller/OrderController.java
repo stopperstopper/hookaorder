@@ -11,7 +11,7 @@ import ru.hookaorder.backend.feature.order.repository.OrderRepository;
 
 @RestController
 @RequestMapping(value = "/order")
-@Api(description = "Контроллер заказов")
+@Api(tags = "Контроллер заказов")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderRepository orderRepository;

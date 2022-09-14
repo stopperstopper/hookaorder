@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/place")
-@Api(description = "Контроллер заведения")
+@Api(tags = "Контроллер заведения")
 @AllArgsConstructor
 public class PlaceController {
     private final PlaceRepository placeRepository;

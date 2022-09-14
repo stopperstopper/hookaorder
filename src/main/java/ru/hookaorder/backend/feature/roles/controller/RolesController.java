@@ -7,6 +7,7 @@ import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 import ru.hookaorder.backend.feature.roles.entity.UpdateRoleRequest;
 import ru.hookaorder.backend.feature.roles.repository.RoleRepository;
 import ru.hookaorder.backend.feature.user.repository.UserRepository;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
@@ -14,6 +15,7 @@ import java.util.Locale;
 import java.util.Set;
 
 @RequestMapping("/roles")
+@ApiIgnore
 @RestController
 @AllArgsConstructor
 public class RolesController {

@@ -20,7 +20,7 @@ public class StaffController {
     private final UserRepository userRepository;
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'OWNER')")
-    @PostMapping("/stuff/add/{placeId}")
+    @PostMapping("/staff/add/{placeId}")
     public ResponseEntity<?> addStaffToPlace(@PathVariable Long placeId, @RequestBody Set<Long> users, Authentication authentication) {
         return placeRepository.findById(placeId).map((val) -> {
             if (CheckOwnerAndRolesAccess.isOwnerOrAdmin(val, authentication)) {

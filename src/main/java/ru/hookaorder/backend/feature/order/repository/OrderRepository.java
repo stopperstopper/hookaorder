@@ -10,4 +10,5 @@ import java.util.List;
 public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
     List<OrderEntity> findAllByUserId(UserEntity userEntity);
     List<OrderEntity> findAllByPlaceId(PlaceEntity placeEntity);
+    List<OrderEntity> findAllByPlaceIdAndUserId(PlaceEntity placeEntity, UserEntity userEntity);
 }

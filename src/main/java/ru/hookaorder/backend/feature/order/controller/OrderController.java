@@ -39,7 +39,7 @@ public class OrderController {
     ResponseEntity<?> getAllOrders(@PathVariable Long currentPlaceId, Authentication authentication) {
         var roles = authentication.getAuthorities();
         if (roles.contains(ERole.ADMIN)) {
-            return ResponseEntity.ok(orderRepository.findAll());
+            return ResponseEntity.ok().body(orderRepository.findAllByPlaceId(placeRepository.findById(currentPlaceId).get()));
         } else if (roles.contains(ERole.OWNER)) {
             if (placeRepository.findById(currentPlaceId).get().getOwner().getId().equals(authentication.getPrincipal())) {
                 return ResponseEntity.ok().body(orderRepository.findAllByPlaceId(placeRepository.findById(currentPlaceId).get()));
@@ -49,7 +49,7 @@ public class OrderController {
             var place = userRepository.findById((Long) authentication.getPrincipal()).get().getWorkPlaces().stream().filter((val) -> val.getId().equals(currentPlaceId)).findFirst().orElseThrow();
             return ResponseEntity.ok().body(orderRepository.findAllByPlaceId(place));
         } else {
-            return ResponseEntity.ok().body(orderRepository.findAllByUserId(userRepository.findById((Long) authentication.getPrincipal()).get()));
+            return ResponseEntity.ok().body(orderRepository.findAllByPlaceIdAndUserId(placeRepository.findById(currentPlaceId).get(), userRepository.findById((Long) authentication.getPrincipal()).get()));
         }
     }
 
@@ -63,7 +63,7 @@ public class OrderController {
     @ApiOperation("Обновление заказа по id")
     ResponseEntity<?> updateOrder(@PathVariable Long id, Authentication authentication) {
         return orderRepository.findById(id).map((val) -> {
-            if (val.getUserId().getId().equals(id) || authentication.getAuthorities().contains(ERole.ADMIN)) {
+            if (val.getUserId().getId().equals(authentication.getPrincipal()) || authentication.getAuthorities().contains(ERole.ADMIN)) {
                 NullAwareBeanUtilsBean.copyNoNullProperties(orderRepository.findById(id), val);
                 return ResponseEntity.ok().body(orderRepository.save(val));
             }

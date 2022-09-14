@@ -8,6 +8,6 @@ import ru.hookaorder.backend.feature.user.entity.UserEntity;
 import java.util.List;
 
 public interface OrderRepository extends CrudRepository<OrderEntity, Long> {
-    List<OrderEntity> findAllByUserId(UserEntity id);
-    List<OrderEntity> findAllByPlaceId(PlaceEntity id);
+    List<OrderEntity> findAllByUserId(UserEntity userEntity);
+    List<OrderEntity> findAllByPlaceId(PlaceEntity placeEntity);
 }

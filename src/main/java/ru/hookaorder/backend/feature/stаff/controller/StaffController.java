@@ -1,4 +1,4 @@
-package ru.hookaorder.backend.feature.stuff.controller;
+package ru.hookaorder.backend.feature.stаff.controller;
 
 import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.Set;
 @RequestMapping(value = "/place")
 @RestController
 @AllArgsConstructor
-public class StuffController {
+public class StaffController {
     private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
 

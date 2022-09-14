@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.hookaorder.backend.feature.order.entity.OrderEntity;
 import ru.hookaorder.backend.feature.order.repository.OrderRepository;
+import ru.hookaorder.backend.feature.place.repository.PlaceRepository;
 import ru.hookaorder.backend.feature.roles.entity.ERole;
 import ru.hookaorder.backend.feature.user.repository.UserRepository;
 import ru.hookaorder.backend.utils.NullAwareBeanUtilsBean;
@@ -20,25 +21,31 @@ import ru.hookaorder.backend.utils.NullAwareBeanUtilsBean;
 public class OrderController {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final PlaceRepository placeRepository;
 
     @GetMapping("/get/{id}")
     @ApiOperation("Получение заказа по id")
     ResponseEntity<?> getOrderById(@PathVariable Long id, Authentication authentication) {
         return orderRepository.findById(id).map((val) -> {
-            if (val.getUserId().getId().equals(id) || authentication.getAuthorities().contains(ERole.ADMIN)) {
+            if (val.getUserId().getId().equals(id) || authentication.getAuthorities().contains(ERole.ADMIN) || val.getPlaceId().getOwner().equals(authentication.getPrincipal())) {
                 return ResponseEntity.ok().body(val);
             }
             return ResponseEntity.badRequest().body("Access denied");
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/get/all")
+    @GetMapping("/get/all/{currentPlaceId}")
     @ApiOperation("Получение всех заказов")
-    ResponseEntity<Iterable<OrderEntity>> getAllOrders(@RequestBody(required = false) Long currentPlaceId, Authentication authentication) {
+    ResponseEntity<?> getAllOrders(@PathVariable Long currentPlaceId, Authentication authentication) {
         var roles = authentication.getAuthorities();
         if (roles.contains(ERole.ADMIN)) {
             return ResponseEntity.ok(orderRepository.findAll());
-        } else if (roles.contains(ERole.OWNER) || roles.contains(ERole.HOOKAH_MASTER) || roles.contains(ERole.WAITER)) {
+        } else if (roles.contains(ERole.OWNER)) {
+            if (placeRepository.findById(currentPlaceId).get().getOwner().getId().equals(authentication.getPrincipal())) {
+                return ResponseEntity.ok().body(orderRepository.findAllByPlaceId(placeRepository.findById(currentPlaceId).get()));
+            }
+            return ResponseEntity.badRequest().body("invalid place id");
+        } else if (roles.contains(ERole.HOOKAH_MASTER) || roles.contains(ERole.WAITER)) {
             var place = userRepository.findById((Long) authentication.getPrincipal()).get().getWorkPlaces().stream().filter((val) -> val.getId().equals(currentPlaceId)).findFirst().orElseThrow();
             return ResponseEntity.ok().body(orderRepository.findAllByPlaceId(place));
         } else {

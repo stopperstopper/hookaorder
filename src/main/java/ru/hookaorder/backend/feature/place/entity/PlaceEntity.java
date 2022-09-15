@@ -64,7 +64,7 @@ public class PlaceEntity extends BaseEntity {
     private AddressEntity address;
 
     @ManyToMany
-    @JoinColumn(name = "stuff_id", referencedColumnName = "id")
-    @JsonProperty(value = "stuff", access = JsonProperty.Access.READ_ONLY)
-    private Set<UserEntity> stuff;
+    @JoinColumn(name = "staff_id", referencedColumnName = "id")
+    @JsonProperty(value = "staff", access = JsonProperty.Access.READ_ONLY)
+    private Set<UserEntity> staff;
 }

@@ -10,13 +10,13 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import static ru.hookaorder.backend.config.Vars.MAX_RATING_VALUE;
+import static ru.hookaorder.backend.config.Vars.MIN_RATING_VALUE;
+
 @Entity
 @Table(name = "ratings")
 @Data
 public class RatingEntity extends BaseEntity {
-
-    private static final byte MIN_RATING_VALUE = 1;
-    private static final byte MAX_RATING_VALUE = 5;
 
     @Column(name = "rating_value")
     @JsonProperty(value = "rating_value")

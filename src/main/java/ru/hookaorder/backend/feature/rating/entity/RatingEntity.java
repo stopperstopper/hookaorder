@@ -1,12 +1,12 @@
 package ru.hookaorder.backend.feature.rating.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
+import ru.hookaorder.backend.feature.user.entity.UserEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -15,7 +15,8 @@ import static ru.hookaorder.backend.config.Vars.MIN_RATING_VALUE;
 
 @Entity
 @Table(name = "ratings")
-@Data
+@Getter
+@Setter
 public class RatingEntity extends BaseEntity {
 
     @Column(name = "rating_value")
@@ -27,4 +28,11 @@ public class RatingEntity extends BaseEntity {
     @Column(name = "is_moderated")
     @JsonProperty(value = "is_enabled", access = JsonProperty.Access.READ_ONLY)
     private boolean isModerated;
+
+    @ManyToOne
+    @JoinTable(name = "user_ratings",
+            joinColumns = {@JoinColumn(name = "rating_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    @JsonProperty(value = "user_id", access = JsonProperty.Access.READ_ONLY)
+    private UserEntity userId;
 }

@@ -1,5 +1,6 @@
 package ru.hookaorder.backend.feature.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
 import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
+import ru.hookaorder.backend.feature.rating.entity.RatingEntity;
 import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 
 import javax.persistence.*;
@@ -52,5 +54,9 @@ public class UserEntity extends BaseEntity {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @JsonProperty(value = "work_places", access = JsonProperty.Access.READ_ONLY)
     private Set<PlaceEntity> workPlaces = Collections.emptySet();
+
+    @OneToMany(mappedBy = "userId")
+    @JsonIgnore
+    private Set<RatingEntity> ratings = Collections.emptySet();
 
 }

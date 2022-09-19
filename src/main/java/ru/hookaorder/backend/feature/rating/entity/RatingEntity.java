@@ -28,11 +28,4 @@ public class RatingEntity extends BaseEntity {
     @Column(name = "is_moderated")
     @JsonProperty(value = "is_enabled", access = JsonProperty.Access.READ_ONLY)
     private boolean isModerated;
-
-    @ManyToOne
-    @JoinTable(name = "user_ratings",
-            joinColumns = {@JoinColumn(name = "rating_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    @JsonProperty(value = "user_id", access = JsonProperty.Access.READ_ONLY)
-    private UserEntity userId;
 }

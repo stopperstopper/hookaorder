@@ -55,8 +55,7 @@ public class UserEntity extends BaseEntity {
     @JsonProperty(value = "work_places", access = JsonProperty.Access.READ_ONLY)
     private Set<PlaceEntity> workPlaces = Collections.emptySet();
 
-    @OneToMany(mappedBy = "userId")
-    @JsonIgnore
+    @OneToMany
+    @JsonProperty(value = "rating", access = JsonProperty.Access.READ_ONLY)
     private Set<RatingEntity> ratings = Collections.emptySet();
-
 }

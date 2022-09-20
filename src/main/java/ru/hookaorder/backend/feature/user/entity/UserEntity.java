@@ -9,6 +9,7 @@ import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
 import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.rating.entity.RatingEntity;
+import ru.hookaorder.backend.feature.rating.repository.RatingRepository;
 import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 
 import javax.persistence.*;
@@ -23,6 +24,9 @@ import java.util.Set;
 @EqualsAndHashCode
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
+
+    private final RatingRepository;
+
     @Column(name = "name")
     private String name;
 
@@ -61,5 +65,5 @@ public class UserEntity extends BaseEntity {
 
     @Transient
     @JsonProperty(value = "rating", access = JsonProperty.Access.READ_ONLY)
-    private float avgRating;
+    private float avgRating = ;
 }

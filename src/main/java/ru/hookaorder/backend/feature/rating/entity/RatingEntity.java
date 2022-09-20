@@ -28,8 +28,4 @@ public class RatingEntity extends BaseEntity {
     @Column(name = "is_moderated")
     @JsonProperty(value = "is_enabled", access = JsonProperty.Access.READ_ONLY)
     private boolean isModerated;
-
-    @ManyToOne
-    @JsonProperty(value = "user_id", access = JsonProperty.Access.READ_ONLY)
-    private UserEntity userEntity;
 }

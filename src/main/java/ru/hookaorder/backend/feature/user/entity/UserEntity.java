@@ -25,8 +25,6 @@ import java.util.Set;
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
 
-    private final RatingRepository;
-
     @Column(name = "name")
     private String name;
 

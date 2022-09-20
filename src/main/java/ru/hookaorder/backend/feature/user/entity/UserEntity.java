@@ -60,5 +60,6 @@ public class UserEntity extends BaseEntity {
     private Set<RatingEntity> ratings = Collections.emptySet();
 
     @Transient
-    private float averageRating;
+    @JsonProperty(value = "rating", access = JsonProperty.Access.READ_ONLY)
+    private float avgRating;
 }

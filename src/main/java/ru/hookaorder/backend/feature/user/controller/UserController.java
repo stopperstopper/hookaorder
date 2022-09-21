@@ -42,7 +42,7 @@ public class UserController {
     @ApiOperation("Обновление пользователя по id")
     ResponseEntity<?> updateUserById(@PathVariable Long id, @RequestBody UserEntity user, Authentication authentication) {
         return userRepository.findById(id).map((val) -> {
-            if (val.getId().equals(authentication.getPrincipal()) || !(authentication.getAuthorities().contains(ERole.ADMIN))) {
+            if (!val.getId().equals(authentication.getPrincipal()) || !(authentication.getAuthorities().contains(ERole.ADMIN))) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden for this user");
             }
             NullAwareBeanUtilsBean.copyNoNullProperties(user, val);

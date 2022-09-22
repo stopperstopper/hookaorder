@@ -18,7 +18,7 @@ public class RatingController {
     private final RatingRepository ratingRepository;
 
     @PostMapping(value = "/add/{userId}")
-    ResponseEntity<?> addRatingByUserId(@RequestBody RatingEntity rating,  @PathVariable Long userId) {
+    ResponseEntity<?> addRatingByUserId(@RequestBody RatingEntity rating, @PathVariable Long userId) {
         RatingEntity ratingEntity = ratingRepository.save(rating);
         UserEntity userEntity = userRepository.findById(userId).orElseThrow();
         userEntity.addRating(ratingEntity);

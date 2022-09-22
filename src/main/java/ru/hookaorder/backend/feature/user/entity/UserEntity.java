@@ -9,14 +9,15 @@ import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
 import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.rating.entity.RatingEntity;
-import ru.hookaorder.backend.feature.rating.repository.RatingRepository;
 import ru.hookaorder.backend.feature.roles.entity.RoleEntity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.Set;
+import java.util.stream.DoubleStream;
 
 @Entity
 @Getter
@@ -63,5 +64,17 @@ public class UserEntity extends BaseEntity {
 
     @Transient
     @JsonProperty(value = "rating", access = JsonProperty.Access.READ_ONLY)
-    private float avgRating;
+    private Double avgRating;
+
+    @PostLoad
+    public void calculateAvgRating() {
+        avgRating = Double.parseDouble(new DecimalFormat("#.##").format(
+                ratings.stream().flatMapToDouble((val) -> DoubleStream.of(val.getRatingValue())).average()
+                        .orElse(0)).replace(",", "."));
+    }
+
+    public UserEntity addRating(RatingEntity ratingEntity) {
+        ratings.add(ratingEntity);
+        return this;
+    }
 }

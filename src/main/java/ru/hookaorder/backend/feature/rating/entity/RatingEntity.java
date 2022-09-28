@@ -29,4 +29,8 @@ public class RatingEntity extends BaseEntity {
     @Column(name = "is_moderated")
     @JsonProperty(value = "is_enabled", access = JsonProperty.Access.READ_ONLY)
     private boolean isModerated;
+
+    @Column(name="owner_id")
+    @JsonProperty(value = "owner_id", access = JsonProperty.Access.READ_ONLY)
+    private Long ownerId;
 }

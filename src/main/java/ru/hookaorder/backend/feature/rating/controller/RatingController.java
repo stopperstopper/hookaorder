@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
+import ru.hookaorder.backend.feature.place.repository.PlaceRepository;
 import ru.hookaorder.backend.feature.rating.entity.RatingEntity;
 import ru.hookaorder.backend.feature.rating.repository.RatingRepository;
 import ru.hookaorder.backend.feature.roles.entity.ERole;
@@ -18,10 +20,12 @@ public class RatingController {
 
     private final UserRepository userRepository;
 
+    private final PlaceRepository placeRepository;
+
     private final RatingRepository ratingRepository;
 
 
-    @PostMapping(value = "/set/{staffUserId}")
+    @PostMapping(value = "/set/staff/{staffUserId}")
     ResponseEntity<?> addRatingByUserId(@RequestBody RatingEntity rating, @PathVariable Long staffUserId, Authentication authentication) {
         UserEntity staffUserEntity = userRepository.findById(staffUserId).get();
         if (staffUserEntity
@@ -43,5 +47,22 @@ public class RatingController {
             return ResponseEntity.ok().body(newRating);
 
         }
+    }
+
+    @PostMapping(value = "/set/place/{placeId}")
+    ResponseEntity<?> addRatingByPlaceId(@RequestBody RatingEntity rating, @PathVariable Long placeId, Authentication authentication) {
+        PlaceEntity placeEntity = placeRepository.findById(placeId).get();
+
+        RatingEntity newRating = placeEntity.getRatings()
+                .stream()
+                .filter((val) -> val.getOwnerId().equals(authentication.getPrincipal()))
+                .findFirst()
+                .orElse(rating);
+        newRating.setRatingValue(rating.getRatingValue());
+        newRating.setOwnerId((Long) authentication.getPrincipal());
+        ratingRepository.save(newRating);
+        placeEntity.getRatings().add(newRating);
+        placeRepository.save(placeEntity);
+        return ResponseEntity.ok().body(newRating);
     }
 }

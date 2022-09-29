@@ -72,9 +72,4 @@ public class UserEntity extends BaseEntity {
                 ratings.stream().flatMapToDouble((val) -> DoubleStream.of(val.getRatingValue())).average()
                         .orElse(0)).replace(",", "."));
     }
-
-    public UserEntity addRating(RatingEntity ratingEntity) {
-        ratings.add(ratingEntity);
-        return this;
-    }
 }

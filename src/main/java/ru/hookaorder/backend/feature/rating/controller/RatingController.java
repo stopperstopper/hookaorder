@@ -28,7 +28,7 @@ public class RatingController {
     @PostMapping(value = "/set/staff/{staffUserId}")
     ResponseEntity<?> addRatingByUserId(@RequestBody RatingEntity rating, @PathVariable Long staffUserId, Authentication authentication) {
         UserEntity staffUserEntity = userRepository.findById(staffUserId).get();
-        if (staffUserEntity
+        if (staffUserEntity.getRolesSet().isEmpty() || staffUserEntity
                 .getRolesSet().stream().map(roleEntity ->
                         ERole.valueOf(roleEntity.getRoleName())).anyMatch(roleName ->
                         !(roleName.equals(ERole.WAITER) || roleName.equals(ERole.HOOKAH_MASTER)))) {
@@ -59,6 +59,7 @@ public class RatingController {
                 .findFirst()
                 .orElse(rating);
         newRating.setRatingValue(rating.getRatingValue());
+        newRating.setComment(rating.getComment());
         newRating.setOwnerId((Long) authentication.getPrincipal());
         ratingRepository.save(newRating);
         placeEntity.getRatings().add(newRating);

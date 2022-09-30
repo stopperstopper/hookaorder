@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 import static ru.hookaorder.backend.config.Vars.MAX_RATING_VALUE;
 import static ru.hookaorder.backend.config.Vars.MIN_RATING_VALUE;
@@ -33,4 +34,10 @@ public class RatingEntity extends BaseEntity {
     @Column(name="owner_id")
     @JsonProperty(value = "owner_id", access = JsonProperty.Access.READ_ONLY)
     private Long ownerId;
+
+    @Column(name = "comment")
+    @JsonProperty(value = "comment")
+    @Size(max = 255, message = "Комментарий слишкой длинный")
+    private String comment;
+
 }

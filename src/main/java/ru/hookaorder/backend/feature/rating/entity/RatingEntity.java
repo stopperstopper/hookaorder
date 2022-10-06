@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
+import ru.hookaorder.backend.feature.comment.entity.CommentEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 
 import static ru.hookaorder.backend.config.Vars.MAX_RATING_VALUE;
 import static ru.hookaorder.backend.config.Vars.MIN_RATING_VALUE;
@@ -35,9 +33,8 @@ public class RatingEntity extends BaseEntity {
     @JsonProperty(value = "owner_id", access = JsonProperty.Access.READ_ONLY)
     private Long ownerId;
 
-    @Column(name = "comment")
-    @JsonProperty(value = "comment")
-    @Size(max = 255, message = "Комментарий слишкой длинный")
-    private String comment;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "comment_id", referencedColumnName = "id")
+    private CommentEntity comment;
 
 }

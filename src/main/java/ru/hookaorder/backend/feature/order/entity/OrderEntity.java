@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
+import ru.hookaorder.backend.feature.comment.entity.CommentEntity;
 import ru.hookaorder.backend.feature.place.entity.PlaceEntity;
 import ru.hookaorder.backend.feature.user.entity.UserEntity;
 
@@ -32,9 +33,7 @@ public class OrderEntity extends BaseEntity {
     @JsonProperty(value = "order_time")
     private String orderTime;
 
-    @Column(name = "comment")
-    @JsonProperty(value = "comment")
-    @Size(max = 255, message = "Комментарий слишком длинный")
-    private String comment;
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "comment_id", referencedColumnName = "id")
+    private CommentEntity comment;
 }

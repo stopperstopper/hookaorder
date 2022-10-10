@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import ru.hookaorder.backend.feature.BaseEntity;
+import ru.hookaorder.backend.feature.comment.entity.CommentEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
@@ -33,4 +32,9 @@ public class RatingEntity extends BaseEntity {
     @Column(name="owner_id")
     @JsonProperty(value = "owner_id", access = JsonProperty.Access.READ_ONLY)
     private Long ownerId;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "comment_id", referencedColumnName = "id")
+    private CommentEntity comment;
+
 }
